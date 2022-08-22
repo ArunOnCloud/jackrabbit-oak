@@ -297,7 +297,7 @@ public class LockBasedScheduler implements Scheduler {
                 refreshHead(true);
                 SegmentNodeState before = head.get();
                 SegmentNodeState after = commit.apply(before);
-                
+                log.debug("before recordId {} , after recordId {} ",before.getRecordId(), after.getRecordId());
                 if (revisions.setHead(before.getRecordId(), after.getRecordId())) {
                     head.set(after);
                     contentChanged(after.getChildNode(ROOT), commit.info());

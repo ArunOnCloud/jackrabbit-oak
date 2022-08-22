@@ -779,6 +779,7 @@ public class SessionImpl implements JackrabbitSession {
 
     @Override
     public String toString() {
+        log.debug("arun sessionDelegate: {}  sessionContext: {} sessionCounter {}",sd,sessionContext,sessionCounter);
         if (isLive()) {
             return sd.getContentSession().toString();
         }

@@ -594,6 +594,7 @@ public class TarFiles implements Closeable {
     public void writeSegment(UUID id, byte[] buffer, int offset, int length, GCGeneration generation, Set<UUID> references, Set<String> binaryReferences) throws IOException {
         lock.writeLock().lock();
         try {
+            log.debug("TarFiles write segment params uuid {} offset {} length {} references {} binaryReferences {}", id, offset, length, references, binaryReferences);
             long size = writer.writeEntry(
                     id.getMostSignificantBits(),
                     id.getLeastSignificantBits(),
@@ -833,6 +834,7 @@ public class TarFiles implements Closeable {
         for (TarReader reader : iterable(head)) {
             ids.addAll(reader.getUUIDs());
         }
+        log.debug("segmentids {}",ids);
         return ids;
     }
 
@@ -868,6 +870,7 @@ public class TarFiles implements Closeable {
                 result.put(entry.getKey(), new HashSet<>(entry.getValue()));
             }
         }
+        log.debug("get graph {}", result);
         return result;
     }
 
@@ -885,6 +888,7 @@ public class TarFiles implements Closeable {
         for (TarReader reader : iterable(head)) {
             index.put(reader.getFileName(), reader.getUUIDs());
         }
+        log.debug("index {}",index);
         return index;
     }
 

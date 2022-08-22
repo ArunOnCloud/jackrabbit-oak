@@ -31,6 +31,8 @@ import org.apache.jackrabbit.oak.spi.state.NodeBuilder;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@code Commit} instance represents a set of related changes, which when
@@ -44,6 +46,9 @@ public class Commit {
     private final CommitInfo info;
 
     private volatile GCGeneration gcGeneration;
+
+    private static final Logger log = LoggerFactory.getLogger(LockBasedScheduler.class);
+
 
     public Commit(@NotNull NodeBuilder changes, @NotNull CommitHook hook, @NotNull CommitInfo info) {
         checkNotNull(changes);
@@ -90,6 +95,8 @@ public class Commit {
      *             because of a conflict.)
      */
     public SegmentNodeState apply(SegmentNodeState base) throws CommitFailedException {
+
+        log.debug("commit base state : {}",base);
         SegmentNodeBuilder builder = base.builder();
         if (SegmentNodeState.fastEquals(getBeforeState(), base.getChildNode(ROOT))) {
             // use a shortcut when there are no external changes

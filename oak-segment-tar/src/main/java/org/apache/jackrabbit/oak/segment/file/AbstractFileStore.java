@@ -283,6 +283,7 @@ public abstract class AbstractFileStore implements SegmentStore, Closeable {
     }
 
     Segment readSegmentUncached(TarFiles tarFiles, SegmentId id) {
+        log.debug(" reading segment {}", id);
         Buffer buffer = tarFiles.readSegment(id.getMostSignificantBits(), id.getLeastSignificantBits());
         if (buffer == null) {
             throw new SegmentNotFoundException(id);

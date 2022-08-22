@@ -56,6 +56,8 @@ import org.apache.jackrabbit.oak.segment.data.StringData;
 import org.apache.jackrabbit.oak.segment.file.tar.GCGeneration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A list of records.
@@ -167,6 +169,9 @@ public class Segment {
         return (address + boundary - 1) & ~(boundary - 1);
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(Segment.class);
+
+
     Segment(
         @NotNull SegmentId id,
         @NotNull SegmentReader reader,
@@ -187,6 +192,7 @@ public class Segment {
         this.recordNumbers = recordNumbers;
         this.segmentReferences = segmentReferences;
         id.loaded(this);
+        LOG.debug("New segment created with segmentId {}",id);
     }
 
     public Segment(@NotNull SegmentIdProvider idProvider,
@@ -215,6 +221,7 @@ public class Segment {
             this.recordNumbers = new IdentityRecordNumbers();
             this.segmentReferences = new IllegalSegmentReferences();
         }
+        LOG.debug("New segment created with segmentId {}",id);
     }
 
     private static String toHex(byte[] bytes) {
@@ -454,8 +461,10 @@ public class Segment {
     @NotNull
     String readString(int recordNumber) {
         StringData data = this.data.readString(recordNumbers.getOffset(recordNumber));
-
+        LOG.debug("StringData {}",data);
+        LOG.debug("StringData {}",data);
         if (data.isString()) {
+            LOG.debug("Segment returning String {}",data.getString());
             return data.getString();
         }
 
@@ -464,6 +473,7 @@ public class Segment {
             RecordId recordId = new RecordId(segmentId, data.getRecordId().getRecordNumber());
             ListRecord list = new ListRecord(recordId, (data.getLength() + BLOCK_SIZE - 1) / BLOCK_SIZE);
             try (SegmentStream stream = new SegmentStream(new RecordId(id, recordNumber), list, data.getLength())) {
+                LOG.debug("Segment returning String {}",stream.getString());
                 return stream.getString();
             }
         }

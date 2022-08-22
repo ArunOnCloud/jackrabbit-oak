@@ -1,0 +1,72 @@
+Index: oak-jcr/src/main/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/oak-jcr/src/main/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryImpl.java b/oak-jcr/src/main/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryImpl.java
+--- a/oak-jcr/src/main/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryImpl.java	(revision 3166f8bc7eb48faea423c3adfd779eab5f303aa3)
++++ b/oak-jcr/src/main/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryImpl.java	(revision 0abdbc25d7f0c19f548800df3914ebf6ff5261f4)
+@@ -233,6 +233,11 @@
+             UnsupportedRepositoryOperationException, VersionException,
+             RepositoryException {
+ 
++        Version version = this.getVersion(versionName);
++        List<String> labels = Arrays.asList(getVersionLabels(version));
++        for(String label:labels) {
++            removeVersionLabel(label);
++        }
+         sessionDelegate.performVoid(new SessionOperation<Void>("removeVersion", true) {
+             @Override
+             public void performVoid() throws RepositoryException {
+Index: oak-jcr/src/test/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/oak-jcr/src/test/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryTest.java b/oak-jcr/src/test/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryTest.java
+--- a/oak-jcr/src/test/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryTest.java	(revision 3166f8bc7eb48faea423c3adfd779eab5f303aa3)
++++ b/oak-jcr/src/test/java/org/apache/jackrabbit/oak/jcr/version/VersionHistoryTest.java	(revision 0abdbc25d7f0c19f548800df3914ebf6ff5261f4)
+@@ -159,4 +159,42 @@
+ 
+         assertFalse("VersionHistory node should have disappeared", superuser.itemExists(vhrpath));
+     }
++    // see OAK-9891
++    public void testRemoveVersionLabelWithRemovalOfVersion() throws RepositoryException{
++        int createVersions = 3;
++        Node n = testRootNode.addNode(nodeName1, testNodeType);
++        n.addMixin(mixVersionable);
++        superuser.save();
++
++        VersionManager vm = superuser.getWorkspace().getVersionManager();
++        for (int i = 0; i < createVersions; i++) {
++            vm.checkout(n.getPath());
++            vm.checkin(n.getPath());
++        }
++        superuser.save();
++
++        VersionHistory vhr = vm.getVersionHistory(n.getPath());
++        // initialize versionName
++        String versionName= "";
++        VersionIterator allversions = vhr.getAllVersions();
++        int count=0;
++        while (allversions.hasNext()) {
++            Version version = allversions.nextVersion();
++            if(count == 1) {
++                versionName=version.getName();
++            }
++            count++;
++        }
++        vhr.addVersionLabel(versionName,"Label_" + versionName + "_0",false);
++        vhr.addVersionLabel(versionName,"Label_" + versionName + "_1",false);
++        vhr.addVersionLabel(versionName,"Label_" + versionName + "_2",false);
++        superuser.save();
++        vhr.removeVersion(versionName);
++        superuser.save();
++
++        assertEquals("version label should not exist", false, vhr.hasVersionLabel("Label_" + versionName + "_0"));
++        assertEquals("version label should not exist", false, vhr.hasVersionLabel("Label_" + versionName + "_1"));
++        assertEquals("version label should not exist", false, vhr.hasVersionLabel("Label_" + versionName + "_2"));
++
++    }
+ }
+\ No newline at end of file

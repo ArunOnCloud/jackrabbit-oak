@@ -285,7 +285,9 @@ public class RepositoryImpl implements JackrabbitRepository {
                     statisticManager, securityProvider,
                     createAttributes(refreshInterval, relaxedLocking),
                     sessionDelegate, observationQueueLength, commitRateLimiter);
-            return context.getSession();
+            Session session = context.getSession();
+            log.info("arun session {}",session);
+            return session;
         } catch (LoginException e) {
             throw new javax.jcr.LoginException(e.getMessage(), e);
         }

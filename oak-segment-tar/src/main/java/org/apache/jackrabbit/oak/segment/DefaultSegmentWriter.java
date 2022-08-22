@@ -505,6 +505,7 @@ public class DefaultSegmentWriter implements SegmentWriter {
          * @return value record identifier
          */
         private RecordId writeString(@NotNull String string) throws IOException {
+            LOG.debug("writing string {}" , string);
             RecordId id = stringCache.get(string);
             if (id != null) {
                 return id; // shortcut if the same string was recently stored
@@ -719,6 +720,7 @@ public class DefaultSegmentWriter implements SegmentWriter {
 
         private RecordId writeTemplate(Template template) throws IOException {
             checkNotNull(template);
+            LOG.debug("writing template {}",template);
 
             RecordId id = templateCache.get(template);
             if (id != null) {

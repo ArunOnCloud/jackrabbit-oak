@@ -66,6 +66,8 @@ import org.apache.jackrabbit.oak.spi.state.NodeBuilder;
 import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.jackrabbit.oak.spi.state.NodeStore;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MutableRoot implements Root {
 
@@ -134,6 +136,7 @@ class MutableRoot implements Root {
         }
     };
 
+    private static final Logger log = LoggerFactory.getLogger(MutableRoot.class);
     /**
      * New instance bases on a given {@link NodeStore} and a workspace
      *
@@ -244,11 +247,14 @@ class MutableRoot implements Root {
 
     @Override
     public void commit(@NotNull Map<String, Object> info) throws CommitFailedException {
+        log.debug("commitInfo {}",info);
         checkLive();
         ContentSession session = getContentSession();
         CommitInfo commitInfo = new CommitInfo(
                 session.toString(), session.getAuthInfo().getUserID(), newInfoWithCommitContext(info));
+        log.debug("before merging commit info {}",commitInfo);
         store.merge(builder, getCommitHook(), commitInfo);
+        log.debug("after merging commit info {}", commitInfo);
         secureBuilder.baseChanged();
         modCount = 0;
         if (permissionProvider.hasValue()) {

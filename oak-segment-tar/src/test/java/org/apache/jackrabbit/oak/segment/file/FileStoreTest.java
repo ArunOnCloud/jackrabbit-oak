@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
+import org.apache.jackrabbit.oak.segment.Segment;
 import org.apache.jackrabbit.oak.segment.SegmentId;
 import org.apache.jackrabbit.oak.segment.SegmentNodeBuilder;
 import org.apache.jackrabbit.oak.segment.SegmentNodeState;
@@ -46,8 +47,11 @@ public class FileStoreTest {
         FileStore fileStore = fileStoreBuilder(getFileStoreFolder()).build();
         try {
             SegmentId id = new SegmentId(fileStore, 0, 0);
+            String buffer=new String("buffer");
+            fileStore.writeSegment(id,buffer.getBytes(),0,6);
             if (fileStore.containsSegment(id)) {
-                fileStore.readSegment(id);
+               Segment segment= fileStore.readSegment(id);
+               //segment.getRecord
             }
         } finally {
             fileStore.close();

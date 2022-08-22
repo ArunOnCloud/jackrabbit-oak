@@ -34,7 +34,7 @@
     <logger name="org.apache.jackrabbit.oak.jcr.operations" level="INFO"/>
     <logger name="org.apache.jackrabbit.oak.security.authentication" level="WARN"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <!--
         <appender-ref ref="console"/>
         -->

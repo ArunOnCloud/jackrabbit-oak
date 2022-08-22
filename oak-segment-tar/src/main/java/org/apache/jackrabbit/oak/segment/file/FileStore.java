@@ -521,7 +521,7 @@ public class FileStore extends AbstractFileStore {
     public void writeSegment(SegmentId id, byte[] buffer, int offset, int length) throws IOException {
         try (ShutDownCloser ignored = shutDown.keepAlive()) {
             Segment segment = null;
-
+            log.debug("writing segment id {}", id);
             // If the segment is a data segment, create a new instance of Segment to
             // access some internal information stored in the segment and to store
             // in an in-memory cache for later use.

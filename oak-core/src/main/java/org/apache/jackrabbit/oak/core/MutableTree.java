@@ -31,6 +31,8 @@ import org.apache.jackrabbit.oak.plugins.tree.impl.AbstractMutableTree;
 import org.apache.jackrabbit.oak.spi.state.NodeBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 final class MutableTree extends AbstractMutableTree {
 
@@ -53,6 +55,8 @@ final class MutableTree extends AbstractMutableTree {
 
     /** Pointer into the list of pending moves */
     private Move pendingMoves;
+
+    private static final Logger log = LoggerFactory.getLogger(MutableTree.class);
 
     MutableTree(@NotNull MutableRoot root, @NotNull NodeBuilder nodeBuilder,
             @NotNull Move pendingMoves) {
@@ -284,6 +288,7 @@ final class MutableTree extends AbstractMutableTree {
         checkArgument(isAbsolute(checkNotNull(path)));
         beforeRead();
         MutableTree child = this;
+        log.debug(" path : {}", path);
         for (String name : elements(path)) {
             child = new MutableTree(root, pendingMoves, child, child.nodeBuilder.getChildNode(name), name);
         }
