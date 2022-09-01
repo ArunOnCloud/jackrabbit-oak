@@ -192,7 +192,7 @@ public class Segment {
         this.recordNumbers = recordNumbers;
         this.segmentReferences = segmentReferences;
         id.loaded(this);
-        LOG.debug("New segment created with segmentId {}",id);
+        LOG.debug("New segment created with segmentId and loaded segment {}",id);
     }
 
     public Segment(@NotNull SegmentIdProvider idProvider,

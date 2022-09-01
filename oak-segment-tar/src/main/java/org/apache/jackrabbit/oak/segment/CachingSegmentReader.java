@@ -87,6 +87,7 @@ public class CachingSegmentReader implements SegmentReader {
         stringCache = new StringCache(stringCacheMB * 1024 * 1024);
         templateCache = new TemplateCache(templateCacheMB * 1024 * 1024);
         this.readStats = readStats;
+        LOG.debug(" CachingSegmentReader instance created with thread name {}, thread id {} ", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     /**

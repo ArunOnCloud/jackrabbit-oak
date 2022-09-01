@@ -97,6 +97,7 @@ class TarWriter implements Closeable {
         this.archive = archiveManager.create(archiveName);
         this.writeIndex = -1;
         this.segmentCount = NoopStats.INSTANCE;
+        log.debug("TarWriter created with thread name {}, thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     TarWriter(SegmentArchiveManager archiveManager, int writeIndex, CounterStats segmentCountStats)
@@ -105,6 +106,7 @@ class TarWriter implements Closeable {
         this.archive = archiveManager.create(format(FILE_NAME_FORMAT, writeIndex, "a"));
         this.writeIndex = writeIndex;
         this.segmentCount = segmentCountStats;
+        log.debug("TarWriter created with thread name {}, thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     synchronized boolean containsEntry(long msb, long lsb) {

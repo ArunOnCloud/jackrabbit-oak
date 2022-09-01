@@ -90,6 +90,7 @@ public class SegmentTarWriter implements SegmentArchiveWriter {
         this.file = file;
         this.monitor = monitor;
         this.ioMonitor = ioMonitor;
+        log.debug("SegmentTarWriter created with thread name {}, thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     @Override

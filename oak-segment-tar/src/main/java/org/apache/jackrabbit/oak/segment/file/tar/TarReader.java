@@ -267,7 +267,7 @@ public class TarReader implements Closeable {
                 .stream()
                 .map(e -> new UUID(e.getMsb(), e.getLsb()))
                 .collect(Collectors.toSet());
-        log.debug("Tar reader params archi");
+        log.debug("Tar reader instance created with thread name {}, thread id {}",Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     long size() {

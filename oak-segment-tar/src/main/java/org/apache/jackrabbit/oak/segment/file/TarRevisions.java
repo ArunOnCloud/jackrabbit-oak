@@ -145,6 +145,7 @@ public class TarRevisions implements Revisions, Closeable {
         this.head = new AtomicReference<>(null);
         this.persistedHead = new AtomicReference<>(null);
         this.persistence = persistence;
+        LOG.debug(" TarRevisions instance created with thread name {} , thread id {}",Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     /**

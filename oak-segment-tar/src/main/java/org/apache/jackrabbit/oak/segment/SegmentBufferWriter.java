@@ -152,6 +152,7 @@ public class SegmentBufferWriter implements WriteOperationHandler {
                 : wid);
 
         this.gcGeneration = checkNotNull(gcGeneration);
+        LOG.debug("SegmentBufferWriter new instance created with thread name {}, thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     @NotNull

@@ -47,6 +47,7 @@ import org.apache.jackrabbit.oak.api.Type;
 import org.apache.jackrabbit.oak.commons.Buffer;
 import org.apache.jackrabbit.oak.plugins.memory.EmptyNodeState;
 import org.apache.jackrabbit.oak.plugins.memory.MemoryChildNodeEntry;
+import org.apache.jackrabbit.oak.segment.file.TarRevisions;
 import org.apache.jackrabbit.oak.spi.blob.BlobStore;
 import org.apache.jackrabbit.oak.spi.state.AbstractNodeState;
 import org.apache.jackrabbit.oak.spi.state.ChildNodeEntry;
@@ -56,6 +57,8 @@ import org.apache.jackrabbit.oak.stats.MeterStats;
 import org.apache.jackrabbit.oak.stats.NoopStats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A record of type "NODE". This class can read a node record from a segment. It
@@ -77,6 +80,8 @@ public class SegmentNodeState extends Record implements NodeState {
 
     private volatile Template template = null;
 
+    private static final Logger LOG = LoggerFactory.getLogger(SegmentNodeState.class);
+
     SegmentNodeState(
         @NotNull SegmentReader reader,
         @NotNull Supplier<SegmentWriter> writer,
@@ -89,6 +94,7 @@ public class SegmentNodeState extends Record implements NodeState {
         this.writer = checkNotNull(memoize(writer));
         this.blobStore = blobStore;
         this.readStats = readStats;
+        LOG.debug("SegmentNodeState instance created with thread name {} ,thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId() );
     }
 
     public SegmentNodeState(

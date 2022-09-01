@@ -174,6 +174,8 @@ public class SegmentNodeStore implements NodeStore, Observable {
 
     private final LoggingHook loggingHook;
 
+    private static final Logger LOG = LoggerFactory.getLogger(SegmentNodeStore.class);
+
     private SegmentNodeStore(SegmentNodeStoreBuilder builder) {
         this.writer = builder.writer;
         this.blobStore = builder.blobStore;
@@ -182,6 +184,8 @@ public class SegmentNodeStore implements NodeStore, Observable {
                 .dispatchChanges(builder.dispatchChanges)
                 .build();
         this.loggingHook = builder.loggingHook;
+
+        LOG.debug("Creating segment node store with thread name {} , thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     @Override

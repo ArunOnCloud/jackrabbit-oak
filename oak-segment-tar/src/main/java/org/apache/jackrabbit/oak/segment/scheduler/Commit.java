@@ -112,6 +112,7 @@ public class Commit {
             builder.setChildNode(ROOT, hook.processCommit(builder.getBaseState().getChildNode(ROOT),
                                                           builder.getNodeState().getChildNode(ROOT), info));
         }
+        log.debug("after commit commit info : {}",info);
         return builder.getNodeState();
     }
 

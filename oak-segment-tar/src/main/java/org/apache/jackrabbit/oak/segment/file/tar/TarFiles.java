@@ -407,6 +407,8 @@ public class TarFiles implements Closeable {
             writeNumber = indices[indices.length - 1] + 1;
         }
         writer = new TarWriter(archiveManager, writeNumber, segmentCount);
+
+        log.debug("TarFiles created with thread name {} , thread id {}", Thread.currentThread().getName(), Thread.currentThread().getId());
     }
 
     @Override
